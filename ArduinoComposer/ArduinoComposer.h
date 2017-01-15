@@ -65,15 +65,37 @@ public:
 		noteCount++;
 		return true;
 	}
+
+	bool popNote () {
+		if(noteCount == 0) {
+			return false;
+		}
+		--noteCount;
+		return true;
+	}
+
 	void addRest(NoteValue hold) {
 		addNote(Notes::None, hold);
 	}
-	void play(int speakerPin) {
+
+	void play(byte speakerPin) {
 		for (int i = 0; i < noteCount; ++i) {
-			float time = (static_cast<float>(values[i]) * 1000.0f / bpm);
-			tone(speakerPin, pgm_read_float( noteFrequencies + static_cast<unsigned>(notes[i])), time);
-			delay(1 + time);
+			playNote(speakerPin, i);
 		}
+	}
+
+	void playNote(byte speakerPin, byte note) {
+			float time = (static_cast<float>(values[note]) * 1000.0f / bpm);
+			tone(speakerPin, pgm_read_float( noteFrequencies + static_cast<unsigned>(notes[note])), time);
+			delay(1 + time);
+	}
+
+	void clear() {
+		noteCount = 0;
+	}
+
+	void BPM( byte newBPM) {
+		bpm = newBPM;
 	}
 };
 
